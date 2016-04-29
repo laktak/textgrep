@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+var fs=require("fs");
+var textgrep=require("../lib/textgrep.js");
+
+var argx, args={}, argv=[];
+process.argv.slice(2).forEach(function(x) { if (!argx && x[0]==="-") { argx=x[1]==="-"; var i=x.indexOf("="); args[x.substr(1, i>0?i-1:undefined)]=i>0?x.substr(i+1):true; } else argv.push(x); });
+
+if (!argv.length || args["-help"] || args["-?"]) {
+  console.error("usage: textgrep [OPTIONS] PATTERN [FORMAT] [FLAGS]");
+  console.error();
+  console.error("  textgrep can be used to extract regex matches from a string.");
+  console.error();
+  console.error("  Unless -f is specified the text will be read from stdin.");
+  console.error();
+  console.error("  PATTERN");
+  console.error("  Specifies the regex you wish to match and capture.");
+  console.error("  Follows the JavaScript RegExp syntax, see");
+  console.error("  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp");
+  console.error("  Use [^]*? to match any character over multiple lines.");
+  console.error();
+  console.error("  FORMAT");
+  console.error("  Specifies the format to output the captured groups.");
+  console.error("  You can use {#} to reference a group where # is the index.");
+  console.error("  Escapes (like \\n, \\t) are allowed.");
+  console.error("  Default: {1}\\n");
+  console.error();
+  console.error("  FLAGS");
+  console.error("  Specifies the regex flags (see MDN).");
+  console.error("  Default: gm");
+  console.error();
+  console.error("  OPTIONS");
+  console.error("  -f=FILE:     will read the text from the given file.");
+  console.error("  --:          stops evaluation of options");
+  console.error("               (allows the PATTERN to start with -)");
+  console.error("  --?|--help:  shows this help screen.");
+  console.error();
+  console.error("Sample:");
+  console.error("  man ls | col -bx | textgrep '^     -(\\w+)\\s+([^]*?)^$' '   -{1} means: {2}\\n\\n'");
+  return 0;
+}
+
+if (args.f) {
+  var text=fs.readFileSync(args.f, "utf8");
+  start(text);
+}
+else {
+  var stdin=process.openStdin();
+  stdin.setEncoding("utf-8");
+  var text="";
+  stdin.on("data", function(chunk) { text+=chunk; });
+  stdin.on("end", function() { start(text); });
+}
+
+function start(text) {
+  try {
+    process.stdout.write(textgrep.grep(text, argv[0], argv[1], argv[2]));
+  } catch (e) {
+    process.stderr.write(e.toString());
+  }
+}

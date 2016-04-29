@@ -1,0 +1,25 @@
+{
+  "name": "textgrep",
+  "description": "Extract multiline regex matches from text.",
+  "main": "./lib/textgrep.js",
+  "author": "Christian Zangl",
+  "version": "1.0.0",
+  "keywords": [
+    "string",
+    "text",
+    "grep",
+    "regex"
+  ],
+  "bin": {
+    "textgrep": "./bin/textgrep"
+  },
+  "homepage": "https://github.com/laktak/textgrep",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laktak/textgrep.git"
+  },
+  "bugs": {
+    "url": "https://github.com/laktak/textgrep/issues"
+  },
+  "license": "MIT"
+}
