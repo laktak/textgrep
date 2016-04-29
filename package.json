@@ -3,7 +3,7 @@
   "description": "Extract multiline regex matches from text.",
   "main": "./lib/textgrep.js",
   "author": "Christian Zangl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "string",
     "text",

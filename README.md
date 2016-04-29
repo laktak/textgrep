@@ -40,7 +40,7 @@ Sample:
 # Install from npm
 
 ```
-npm install textgrep
+npm install textgrep -g
 ```
 
 # API
